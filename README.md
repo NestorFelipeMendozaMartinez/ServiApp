@@ -84,6 +84,8 @@ Esta es una aplicación Django REST Framework para una plataforma de servicios b
 - GET/PUT/DELETE /api/requests/offers/<id>/ - Detalle
 - GET/POST /api/requests/reviews/ - Reseñas
 - GET/POST /api/requests/transactions/ - Transacciones
+- POST /api/requests/offers/<id>/contract-sign/ - Firmar contrato (cliente o proveedor)
+- GET /api/requests/offers/<id>/contract/ - Descargar contrato PDF
 
 ## Tecnologías
 - Backend: Django + DRF + JWT

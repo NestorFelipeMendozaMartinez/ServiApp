@@ -1,8 +1,10 @@
-from rest_framework import generics, status
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.views import APIView
 from django.contrib.auth import authenticate
+from django.contrib.auth.models import User
+from rest_framework import generics, status
+from rest_framework.generics import ListAPIView
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from .models import Profile
 from .serializers import RegisterSerializer, ProfileSerializer
@@ -36,3 +38,8 @@ class ProfileView(generics.RetrieveUpdateAPIView):
 
     def get_object(self):
         return self.request.user.profile
+
+class UserListView(ListAPIView):
+    queryset = Profile.objects.select_related('user').all()
+    serializer_class = ProfileSerializer
+    permission_classes = [IsAdminUser]

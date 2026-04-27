@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import ServiceRequest, Offer, Review, Transaction
+from .models import ServiceRequest, Offer, Review, Transaction, Contract
 from services.serializers import ServiceCategorySerializer
 from users.serializers import UserSerializer
 
@@ -10,24 +10,34 @@ class ServiceRequestSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ServiceRequest
-        fields = ['id', 'client', 'category', 'category_id', 'title', 'description', 'latitude', 'longitude', 'status', 'created_at']
+        fields = ['id', 'client', 'category', 'category_id', 'title', 'description', 'location', 'status', 'created_at']
 
 class OfferSerializer(serializers.ModelSerializer):
     provider = UserSerializer(read_only=True)
     request = ServiceRequestSerializer(read_only=True)
+    request_id = serializers.IntegerField(write_only=True)
 
     class Meta:
         model = Offer
-        fields = ['id', 'request', 'provider', 'price', 'message', 'status', 'created_at']
+        fields = ['id', 'request', 'request_id', 'provider', 'price', 'message', 'status', 'created_at']
 
 class ReviewSerializer(serializers.ModelSerializer):
     reviewer = UserSerializer(read_only=True)
     reviewed = UserSerializer(read_only=True)
     request = ServiceRequestSerializer(read_only=True)
+    request_id = serializers.IntegerField(write_only=True)
+    reviewed_id = serializers.IntegerField(write_only=True)
 
     class Meta:
         model = Review
-        fields = ['id', 'reviewer', 'reviewed', 'request', 'rating', 'comment', 'created_at']
+        fields = ['id', 'reviewer', 'reviewed', 'request', 'request_id', 'reviewed_id', 'rating', 'comment', 'created_at']
+
+class ContractSerializer(serializers.ModelSerializer):
+    offer = serializers.PrimaryKeyRelatedField(read_only=True)
+
+    class Meta:
+        model = Contract
+        fields = ['id', 'offer', 'client_signed', 'provider_signed', 'client_signature', 'provider_signature', 'created_at', 'updated_at']
 
 class TransactionSerializer(serializers.ModelSerializer):
     request = ServiceRequestSerializer(read_only=True)

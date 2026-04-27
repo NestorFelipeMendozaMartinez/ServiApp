@@ -9,9 +9,10 @@ class ServiceCategorySerializer(serializers.ModelSerializer):
 
 class ServiceSerializer(serializers.ModelSerializer):
     provider = UserSerializer(read_only=True)
+    provider_rating = serializers.FloatField(source='provider.profile.rating', read_only=True)
     category = ServiceCategorySerializer(read_only=True)
     category_id = serializers.IntegerField(write_only=True)
 
     class Meta:
         model = Service
-        fields = ['id', 'provider', 'category', 'category_id', 'title', 'description', 'price', 'created_at']
+        fields = ['id', 'provider', 'provider_rating', 'category', 'category_id', 'title', 'description', 'price', 'created_at']

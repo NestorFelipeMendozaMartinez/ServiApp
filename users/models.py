@@ -6,8 +6,7 @@ from django.dispatch import receiver
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     phone = models.CharField(max_length=15, blank=True)
-    latitude = models.FloatField(null=True, blank=True)
-    longitude = models.FloatField(null=True, blank=True)
+    location = models.CharField(max_length=100, blank=True)
     bio = models.TextField(blank=True)
     is_provider = models.BooleanField(default=False)
     rating = models.FloatField(default=0.0)

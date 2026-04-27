@@ -13,6 +13,7 @@ class ServiceRequest(models.Model):
     category = models.ForeignKey(ServiceCategory, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     description = models.TextField()
+    location = models.CharField(max_length=100, blank=True)
     latitude = models.FloatField(null=True, blank=True)
     longitude = models.FloatField(null=True, blank=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='open')
@@ -47,6 +48,22 @@ class Review(models.Model):
 
     def __str__(self):
         return f"Review de {self.reviewer.username} a {self.reviewed.username}"
+
+class Contract(models.Model):
+    offer = models.OneToOneField(Offer, on_delete=models.CASCADE, related_name='contract')
+    client_signed = models.BooleanField(default=False)
+    provider_signed = models.BooleanField(default=False)
+    client_signature = models.CharField(max_length=200, blank=True)
+    provider_signature = models.CharField(max_length=200, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Contrato de oferta {self.offer.id}"
+
+    @property
+    def is_fully_signed(self):
+        return self.client_signed and self.provider_signed
 
 class Transaction(models.Model):
     PAYMENT_METHODS = [
