@@ -82,9 +82,14 @@ WSGI_APPLICATION = 'servicios.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
+from urllib.parse import urlparse
+import os
+
 DATABASE_URL = os.environ.get('DATABASE_URL')
+
 if DATABASE_URL:
     url = urlparse(DATABASE_URL)
+
     if url.scheme in ('postgres', 'postgresql'):
         DATABASES = {
             'default': {
@@ -93,9 +98,10 @@ if DATABASE_URL:
                 'USER': url.username,
                 'PASSWORD': url.password,
                 'HOST': url.hostname,
-                'PORT': url.port or '',
+                'PORT': url.port,
             }
         }
+
     else:
         DATABASES = {
             'default': {
@@ -157,4 +163,4 @@ from datetime import timedelta
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-}
+} 

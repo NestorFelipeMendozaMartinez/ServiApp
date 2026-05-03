@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from services.models import ServiceCategory
+from services.models import Category
 
 class ServiceRequest(models.Model):
     STATUS_CHOICES = [
@@ -10,8 +10,9 @@ class ServiceRequest(models.Model):
         ('cancelled', 'Cancelada'),
     ]
     client = models.ForeignKey(User, on_delete=models.CASCADE, related_name='requests')
-    category = models.ForeignKey(ServiceCategory, on_delete=models.CASCADE)
-    title = models.CharField(max_length=200)
+from services.models import Category  # asegúrate que esto esté arriba
+
+category = models.ForeignKey(Category, on_delete=models.CASCADE)    title = models.CharField(max_length=200)
     description = models.TextField()
     location = models.CharField(max_length=100, blank=True)
     latitude = models.FloatField(null=True, blank=True)
