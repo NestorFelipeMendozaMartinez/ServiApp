@@ -1,43 +1,55 @@
-# Plataforma de Servicios Bajo Demanda
+# Proyecto Django + Vue.js
 
-Esta es una aplicación Django REST Framework para una plataforma de servicios bajo demanda, similar a Uber, Rappi y Fiverr.
+## Estructura
 
-## Características
-- Autenticación JWT
-- Perfiles de usuario con geolocalización
-- Categorías y servicios
-- Solicitudes de servicios y ofertas
-- Sistema de calificaciones y reseñas
-- Transacciones simuladas (efectivo/transferencia)
-- Frontend web básico integrado
+- `servicios/`  → Proyecto Django (backend)
+- `frontend/`   → Proyecto Vue.js (frontend SPA)
 
-## Configuración de Desarrollo
+## Cómo ejecutar
 
-1. Instalar dependencias:
+### Backend (Django)
+1. Crea y activa el entorno virtual:
+   ```
+   python -m venv .venv
+   .venv\Scripts\activate  # En Windows
+   ```
+2. Instala dependencias:
    ```
    pip install -r requirements.txt
    ```
-
-2. Configurar la base de datos:
+3. Aplica migraciones:
    ```
-   python manage.py makemigrations
    python manage.py migrate
    ```
-
-3. Crear superusuario:
-   ```
-   python manage.py createsuperuser
-   ```
-
-4. Ejecutar el servidor:
+4. Ejecuta el servidor:
    ```
    python manage.py runserver
    ```
 
-## Despliegue en Producción
+### Frontend (Vue.js)
+1. Instala Node.js desde https://nodejs.org/
+2. Ve a la carpeta `frontend/` y crea el proyecto Vue:
+   ```
+   cd frontend
+   npm create vue@latest
+   # Sigue las instrucciones
+   cd <nombre-proyecto>
+   npm install
+   npm run dev
+   ```
 
-1. Configurar variables de entorno:
-   - Copia `.env.example` a `.env` y configura las variables:
+## Conexión
+- El frontend hace peticiones a la API Django (`http://localhost:8000/api/...`).
+- Configura CORS en Django para permitir peticiones desde el frontend.
+- Usa JWT para autenticación si es necesario.
+
+## Producción
+- El frontend se puede construir con `npm run build` y servir los archivos estáticos desde un servidor web.
+- El backend puede desplegarse en cualquier servicio compatible con Django.
+
+---
+
+**¡Listo para escalar y profesionalizar tu app!**
      - `DJANGO_SECRET_KEY=<tu_clave_secreta>`
      - `DJANGO_DEBUG=False`
      - `DJANGO_ALLOWED_HOSTS=<tu_dominio>,localhost`
@@ -84,6 +96,8 @@ Esta es una aplicación Django REST Framework para una plataforma de servicios b
 - GET/PUT/DELETE /api/requests/offers/<id>/ - Detalle
 - GET/POST /api/requests/reviews/ - Reseñas
 - GET/POST /api/requests/transactions/ - Transacciones
+- POST /api/requests/offers/<id>/contract-sign/ - Firmar contrato (cliente o proveedor)
+- GET /api/requests/offers/<id>/contract/ - Descargar contrato PDF
 
 ## Tecnologías
 - Backend: Django + DRF + JWT

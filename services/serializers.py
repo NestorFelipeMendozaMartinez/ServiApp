@@ -1,17 +1,31 @@
 from rest_framework import serializers
-from .models import ServiceCategory, Service
-from users.serializers import UserSerializer
+from .models import Category, Service
 
-class ServiceCategorySerializer(serializers.ModelSerializer):
+
+class CategorySerializer(serializers.ModelSerializer):
     class Meta:
-        model = ServiceCategory
-        fields = '__all__'
+        model = Category
+        fields = ['id', 'name', 'icon']
+
 
 class ServiceSerializer(serializers.ModelSerializer):
-    provider = UserSerializer(read_only=True)
-    category = ServiceCategorySerializer(read_only=True)
-    category_id = serializers.IntegerField(write_only=True)
+    provider_username = serializers.ReadOnlyField(source='provider.username')
+    provider_id = serializers.ReadOnlyField(source='provider.id')
+    provider_rating = serializers.ReadOnlyField(source='provider.profile.rating')
+    category_name = serializers.ReadOnlyField(source='category.name')
+    image_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Service
-        fields = ['id', 'provider', 'category', 'category_id', 'title', 'description', 'price', 'created_at']
+        fields = [
+            'id', 'provider', 'provider_id', 'provider_username', 'provider_rating',
+            'category', 'category_name', 'title', 'description',
+            'price', 'city', 'image', 'image_url', 'is_active', 'created_at',
+        ]
+        read_only_fields = ['provider', 'created_at']
+
+    def get_image_url(self, obj):
+        request = self.context.get('request')
+        if obj.image and request:
+            return request.build_absolute_uri(obj.image.url)
+        return None
